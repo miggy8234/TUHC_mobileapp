@@ -1,0 +1,32 @@
+<ion-view view-title="Sign-In">
+  <ion-content>
+    <div class="list">
+
+      <div class="item card">
+        <div class="logo text-center padding">
+          <img src='../img/tuhc.png'>
+        </div>
+      </div>
+
+      <label class="item item-input">
+        <span class="input-label">Username</span>
+        <input type="text" ng-model="user.username">
+      </label>
+      <label class="item item-input">
+        <span class="input-label">Password</span>
+        <input type="password" ng-model="user.password">
+      </label>
+    </div>
+    <div class="padding">
+      <button class="button button-block button-positive" ng-click="login()">
+        Sign-In
+      </button>
+      <p class="text-center">
+        <a ng-click="checkValidLogIn()">Forgot password</a>
+      </p>
+    </div>
+    <div class="padding">
+    <iframe id="googleLogin" src="http://www.google.com" style="height:100%;width:100%;"></iframe>
+    </div>
+  </ion-content>
+</ion-view>
