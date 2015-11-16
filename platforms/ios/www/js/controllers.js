@@ -1,7 +1,7 @@
   var auth2; // The Sign-In object.
   var googleUser; // The current user.
 
-angular.module('starter.controllers', [])
+angular.module('starter.controllers', ['ngInstafeed'])
 
 .controller('LoginCtrl', function($scope, $state, $cordovaOauth, $http, $ionicPopup, $cordovaOauth) {
 
@@ -10,6 +10,15 @@ angular.module('starter.controllers', [])
   var clientId = "320068819551-049rlk0jfm7tasqro2e2lutj9sl1k82n.apps.googleusercontent.com";
   var clientSecret = "zHXjz9czrpI2WK01AQUhfjKm";
   var appScope = 'https://www.googleapis.com/auth/plus.login https://www.googleapis.com/auth/userinfo.email';
+
+  $scope.loginFake = function(){
+      auth2 = {};
+      auth2.displayName = 'fakeDisplayName';
+      var temp = {'value': 'fakeEmain@email.com'};
+      auth2.emails = [temp];
+      auth2.emails[0].value = 'fakeEmain@email.com';
+      window.location.href = '#/tab/welcome';
+  }
 
   $scope.loginIonic = function(){
     
@@ -41,8 +50,32 @@ angular.module('starter.controllers', [])
 
 })
 
-.controller('SocialFeedCtrl', function($scope, $http) {
+.controller('SocialFeedCtrl', function($scope, $http, ngInstafeed) {
 
+  $scope.ngInstafeedModel = ngInstafeed.model;
+  $scope.ngInstafeedState = ngInstafeed.state;
+  $scope.load = {};
+  $scope.load.tagged = function() {
+        ngInstafeed.get({
+          get: 'user',
+          userId: 1071009335
+        }, function(err, res) {
+          if(err) { throw err; }
+          else {
+            console.log(res);
+            $scope.model = res;
+          }
+        });
+      }
+
+      $scope.load.more = function() {
+        ngInstafeed.more(function(err, res) {
+          if(err) { throw err; }
+          else {
+            console.log(res);
+          }
+        });
+      }
 
 })
 

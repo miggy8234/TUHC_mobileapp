@@ -5,7 +5,7 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter.services'])
+angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter.services', 'ngInstafeed'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -22,7 +22,19 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter
     }
   });
 })
-
+.config([
+  'ngInstafeedProvider',
+  function(
+    ngInstafeedProvider
+  ) {
+    /**
+     * Generate your own Client ID or risk having your images not 
+     * appear if this demo key reaches the maximum allowed quota by
+     * Instagram.
+     */
+    ngInstafeedProvider.setClientId('6cf204f3acbb4c15854f6d43056b91e8');
+  }
+])
 .config(function($stateProvider, $urlRouterProvider) {
 
   // Ionic uses AngularUI Router which uses the concept of states

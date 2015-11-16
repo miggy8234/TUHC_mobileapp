@@ -11,6 +11,15 @@ angular.module('starter.controllers', ['ngInstafeed'])
   var clientSecret = "zHXjz9czrpI2WK01AQUhfjKm";
   var appScope = 'https://www.googleapis.com/auth/plus.login https://www.googleapis.com/auth/userinfo.email';
 
+  $scope.loginFake = function(){
+      auth2 = {};
+      auth2.displayName = 'fakeDisplayName';
+      var temp = {'value': 'fakeEmain@email.com'};
+      auth2.emails = [temp];
+      auth2.emails[0].value = 'fakeEmain@email.com';
+      window.location.href = '#/tab/welcome';
+  }
+
   $scope.loginIonic = function(){
     
     //logs in using Ionics API however unsure how to get info from it.
