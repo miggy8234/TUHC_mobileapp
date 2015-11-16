@@ -57,103 +57,7 @@ googleLoginService.factory('googleLogin', [
         service.client_id = '320068819551-049rlk0jfm7tasqro2e2lutj9sl1k82n.apps.googleusercontent.com';
         service.secret = 'nzHXjz9czrpI2WK01AQUhfjKm';
         service.scope = 'https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/plus.me';
-        service.gulp = function (url, name) {
-            url = url.substring(url.indexOf('?') + 1, url.length);
 
-            return url.replace('code=', '');
-
-//            name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
-//            var regexS = "[\\#&]" + name + "=([^&#]*)";
-//            var regex = new RegExp(regexS);
-//            var results = regex.exec(url);
-//            if (results == null)
-//                return "";
-//            else
-//                return results[1];
-
-//            var match,
-//                    pl = /\+/g, // Regex for replacing addition symbol with a space
-//                    search = /([^&=]+)=?([^&]*)/g,
-//                    decode = function (s) {
-//                        return decodeURIComponent(s.replace(pl, " "));
-//                    },
-//                    query = url;
-//
-//            var urlParams = {};
-//            while (match = search.exec(query))
-//                urlParams[decode(match[1])] = decode(match[2]);
-//
-//            if (urlParams.name) {
-//                return urlParams.name;
-//            } else {
-//                return false;
-//            }
-
-        };
-        service.authorize = function (options) {
-            var def = $q.defer();
-            var self = this;
-
-            var access_token = timeStorage.get('google_access_token');
-            if (access_token) {
-                $log.info('Direct Access Token :' + access_token);
-                service.getUserInfo(access_token, def);
-            } else {
-
-                var params = 'client_id=' + encodeURIComponent(options.client_id);
-                params += '&redirect_uri=' + encodeURIComponent(options.redirect_uri);
-                params += '&response_type=code';
-                params += '&scope=' + encodeURIComponent(options.scope);
-                var authUrl = 'https://accounts.google.com/o/oauth2/auth?' + params;
-
-                var win = window.open(authUrl, '_blank', 'location=no,toolbar=no,width=800, height=800');
-                var context = this;
-
-                if (ionic.Platform.isWebView()) {
-                    console.log('using in app browser');
-                    win.addEventListener('loadstart', function (data) {
-                        console.log('load start');
-                        if (data.url.indexOf(context.redirect_url) === 0) {
-                            console.log('redirect url found ' + context.redirect_url);
-                            console.log('window url found ' + data.url);
-                            //win.close();
-                            var url = data.url;
-                            var access_code = context.gulp(url, 'code');
-                            if (access_code) {
-                                context.validateToken(access_code, def);
-                            } else {
-                                def.reject({error: 'Access Code Not Found'});
-                            }
-                        }
-
-                    });
-                } else {
-                    console.log('InAppBrowser not found11');
-                    var pollTimer = $interval(function () {
-                        try {
-                            console.log("google window url " + win.document.URL);
-                            if (win.document.URL.indexOf(context.redirect_url) === 0) {
-                                console.log('redirect url found');
-                                win.close();
-                                $interval.cancel(pollTimer);
-                                pollTimer = false;
-                                var url = win.document.URL;
-                                $log.debug('Final URL ' + url);
-                                var access_code = context.gulp(url, 'code');
-                                if (access_code) {
-                                    $log.info('Access Code: ' + access_code);
-                                    context.validateToken(access_code, def);
-                                } else {
-                                    def.reject({error: 'Access Code Not Found'});
-                                }
-                            }
-                        } catch (e) {
-                        }
-                    }, 100);
-                }
-            }
-            return def.promise;
-        };
         service.validateToken = function (token, def) {
             $log.info('Code: ' + token);
             var test = {
@@ -164,7 +68,7 @@ googleLoginService.factory('googleLogin', [
                     grant_type: 'authorization_code',
                     scope: ''
                 };
-            alert(JSON.stringify(test));
+            //alert(JSON.stringify(test));
             var http = $http({
                 url: 'https://www.googleapis.com/oauth2/v3/token',
                 method: 'POST',

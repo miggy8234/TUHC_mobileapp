@@ -1,83 +1,59 @@
+  var auth2; // The Sign-In object.
+  var googleUser; // The current user.
+
 angular.module('starter.controllers', [])
 
-.controller('LoginCtrl', function($scope, $state, $cordovaOauth, $http, googleLogin, login) {
+.controller('LoginCtrl', function($scope, $state, $cordovaOauth, $http, $ionicPopup, $cordovaOauth) {
 
-  var requestToken = "";
+  var tokenExperation = "";
   var accessToken = "";
   var clientId = "320068819551-049rlk0jfm7tasqro2e2lutj9sl1k82n.apps.googleusercontent.com";
   var clientSecret = "zHXjz9czrpI2WK01AQUhfjKm";
-  var returnUrl = "http://localhost:8100/index.html";
+  var appScope = 'https://www.googleapis.com/auth/plus.login https://www.googleapis.com/auth/userinfo.email';
 
-  //alert((window.location.href).startsWith("http://localhost:8100/index.html"));
-  if((window.location.href).startsWith("http://localhost:8100/index.html")) {
-      requestToken = ((window.location.href).split("code=")[1]).replace("#/login", "").replace("4/", "");
-      alert(requestToken);
-      $http({
-        method: "post", 
-        url: "https://accounts.google.com/o/oauth2/token", 
-        data: "client_id=" + clientId + "&client_secret=" + clientSecret + "&redirect_uri=" + returnUrl + "&grant_type=authorization_code" + "&code=" + requestToken 
-      })
-          .success(function(data) {
-            alert("worked");
-              accessToken = data.access_token;
-              $location.path("/tabs");
-          })
-          .error(function(data, status) {
-              alert("ERROR: " + data);
-          });
-      //ref.close();
-  }
-
-  $scope.login = function() {
-        var ref = window.open('https://accounts.google.com/o/oauth2/auth?client_id=' + clientId + '&redirect_uri=' + returnUrl + '&scope=https://www.googleapis.com/auth/urlshortener&approval_prompt=force&response_type=code&access_type=offline', '_blank', 'location=no');
-        ref.addEventListener('onpagehide', function(event) {
-         
-         });
-    }
- 
-    if (typeof String.prototype.startsWith != 'function') {
-        String.prototype.startsWith = function (str){
-            return this.indexOf(str) == 0;
-        };
-    }
-
-  $scope.google_data = {};
-
-  $scope.signIn = function(user) {
-    //console.log('Sign-In', user);
-    //$scope.googleLogin();
-    //$state.go('tab.dash');
-    $scope.loginsucess = login.canLogin();
-    console.log($scope.loginsucess);
-  };
-
-  $scope.checkValidLogIn = function(){
-    alert(JSON.stringify(googleLogin.getUserFriends()));
-    alert(JSON.stringify($scope.google_data));
-  }
-
-  $scope.googleLogin = function() {
-    var promise = googleLogin.startLogin();
-    promise.then(function (data) {
-        $scope.google_data = data;
-        //alert(JSON.stringify(data));
-    }, function (data) {
-        $scope.google_data = data;
-        //alert(JSON.stringify(data));
-    });
-
-  }
-
-  if($scope.google_data != null){
-    //alert(JSON.stringify($scope.google_data));
+  $scope.loginIonic = function(){
+    
+    //logs in using Ionics API however unsure how to get info from it.
+    $cordovaOauth.google(clientId, ["email"])
+        .then(function(result) {
+            // results
+            gapi.auth.setToken(result);
+            console.log('GAPI with set token: ', gapi.auth);
+            gapi.client.load('plus','v1', function(){
+             var request = gapi.client.plus.people.get({
+               'userId': 'me'
+             });
+             request.execute(function(resp) {
+                console.log('All data pulled:',resp);
+                console.log('Retrieved profile for: ' + resp.displayName);
+                console.log('Retrieved email: ', resp.emails[0].value);
+                auth2 = resp;
+                //Check here if the email is valid
+                window.location.href = '#/tab/welcome';
+             });
+            });
+            console.log("Response Object -> " + JSON.stringify(result));
+        }, function(error) {
+            // error
+            console.log(error);
+        });
   }
 
 })
 
-.controller('DashCtrl', function($scope, $http) {
+.controller('SocialFeedCtrl', function($scope, $http) {
 
-  $scope.accessToken = accessToken;
-  alert($scope.accessToken);
+
+
+})
+
+.controller('WelcomeCtrl', function($scope, $http) {
+
+  var profile = auth2;
+  $scope.name = profile.displayName;
+  $scope.email = profile.emails[0].value
+  console.log('Name: ' + profile.displayName);
+  console.log('Email: ' + profile.emails[0].value);
 
 })
 

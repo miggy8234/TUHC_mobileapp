@@ -3,6 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+    <meta name="google-signin-client_id" content="320068819551-049rlk0jfm7tasqro2e2lutj9sl1k82n.apps.googleusercontent.com">
     <title></title>
 
     <link href="lib/ionic/css/ionic.css" rel="stylesheet">
@@ -17,14 +18,15 @@
 
     <!-- cordova script (this will be a 404 during development) -->
     <script src="cordova.js"></script>
+    <script src="js/sha1.js"></script>
     <script src="lib/ngStorage.min.js"></script>
 
     <!-- your app's js -->
     <script src="js/app.js"></script>
     <script src="js/controllers.js"></script>
     <script src="js/services.js"></script>
-    <script src="js/google_login.js"></script>
-    <script src="js/GoogleAuth.js"></script>
+
+    <script src="https://apis.google.com/js/client.js?onload=init"></script>
 
     <script src="js/ng-cordova.min.js"></script>
 

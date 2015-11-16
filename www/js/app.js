@@ -5,7 +5,7 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter.services', 'GoogleLoginService', 'GoogleAuth'])
+angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter.services'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -45,13 +45,22 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter
   })
 
   // Each tab has its own nav history stack:
-
-  .state('tab.dash', {
-    url: '/dash',
+  .state('tab.welcome', {
+    url: '/welcome',
     views: {
-      'tab-dash': {
-        templateUrl: 'templates/tab-dash.html',
-        controller: 'DashCtrl'
+      'tab-welcome': {
+        templateUrl: 'templates/welcome.html',
+        controller: 'WelcomeCtrl'
+      }
+    }
+  })
+
+  .state('tab.social', {
+    url: '/social',
+    views: {
+      'tab-social': {
+        templateUrl: 'templates/socialFeed.html',
+        controller: 'SocialFeedCtrl'
       }
     }
   })
