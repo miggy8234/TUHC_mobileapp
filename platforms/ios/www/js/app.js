@@ -45,23 +45,22 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter
   })
 
   // Each tab has its own nav history stack:
-
-  .state('tab.dash', {
-    url: '/dash',
-    views: {
-      'tab-dash': {
-        templateUrl: 'templates/tab-dash.html',
-        controller: 'DashCtrl'
-      }
-    }
-  })
-
   .state('tab.welcome', {
     url: '/welcome',
     views: {
       'tab-welcome': {
         templateUrl: 'templates/welcome.html',
         controller: 'WelcomeCtrl'
+      }
+    }
+  })
+
+  .state('tab.social', {
+    url: '/social',
+    views: {
+      'tab-social': {
+        templateUrl: 'templates/socialFeed.html',
+        controller: 'SocialFeedCtrl'
       }
     }
   })

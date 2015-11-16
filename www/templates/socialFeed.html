@@ -1,7 +1,11 @@
 <ion-view view-title="Social Feed">
   <ion-content class="padding">
-    <div class="list card">
-      
-    </div>
+    <div class="list card" ng-init="load.tagged()">
+      <div class="item item-divider">Latest From Instagram</div>
+      <div class="card" ng-repeat="item in ngInstafeedModel.data">
+        <div class="item item-image">
+          <img ng-src="{{item.images.standard_resolution.url}}">
+        </div>
+      </div>
   </ion-content>
 </ion-view>

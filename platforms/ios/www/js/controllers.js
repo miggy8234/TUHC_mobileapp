@@ -41,13 +41,8 @@ angular.module('starter.controllers', [])
 
 })
 
-.controller('DashCtrl', function($scope, $http) {
+.controller('SocialFeedCtrl', function($scope, $http) {
 
-  var profile = auth2;
-  $scope.name = profile.displayName;
-  $scope.email = profile.emails[0].value
-  console.log('Name: ' + profile.displayName);
-  console.log('Email: ' + profile.emails[0].value);
 
 })
 

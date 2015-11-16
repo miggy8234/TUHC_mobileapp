@@ -1,7 +1,7 @@
   var auth2; // The Sign-In object.
   var googleUser; // The current user.
 
-angular.module('starter.controllers', [])
+angular.module('starter.controllers', ['ngInstafeed'])
 
 .controller('LoginCtrl', function($scope, $state, $cordovaOauth, $http, $ionicPopup, $cordovaOauth) {
 
@@ -41,9 +41,32 @@ angular.module('starter.controllers', [])
 
 })
 
-.controller('SocialFeedCtrl', function($scope, $http) {
+.controller('SocialFeedCtrl', function($scope, $http, ngInstafeed) {
 
+  $scope.ngInstafeedModel = ngInstafeed.model;
+  $scope.ngInstafeedState = ngInstafeed.state;
+  $scope.load = {};
+  $scope.load.tagged = function() {
+        ngInstafeed.get({
+          get: 'user',
+          userId: 1071009335
+        }, function(err, res) {
+          if(err) { throw err; }
+          else {
+            console.log(res);
+            $scope.model = res;
+          }
+        });
+      }
 
+      $scope.load.more = function() {
+        ngInstafeed.more(function(err, res) {
+          if(err) { throw err; }
+          else {
+            console.log(res);
+          }
+        });
+      }
 
 })
 
