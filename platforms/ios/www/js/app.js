@@ -32,7 +32,7 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter
      * appear if this demo key reaches the maximum allowed quota by
      * Instagram.
      */
-    ngInstafeedProvider.setClientId('6cf204f3acbb4c15854f6d43056b91e8');
+    ngInstafeedProvider.setClientId('c3eff52f3df340d490f00b058c8b24cd');
   }
 ])
 .config(function($stateProvider, $urlRouterProvider) {
@@ -77,6 +77,16 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter
     }
   })
 
+  .state('tab.school', {
+    url: '/school',
+    views: {
+      'tab-school': {
+        templateUrl: 'templates/schoolResources.html',
+        controller: 'SchoolDetailCtrl'
+      }
+    }
+  })
+
   .state('tab.chats', {
       url: '/chats',
       views: {
@@ -111,18 +121,8 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter
 
 })
 
-.config(function($cordovaInAppBrowserProvider) {
-
-  var defaultOptions = {
-    location: 'no',
-    clearcache: 'no',
-    toolbar: 'no'
-  };
-
-  document.addEventListener(function () {
-
-    $cordovaInAppBrowserProvider.setDefaultOptions(options)
-
-  }, false);
+.config(function($ionicConfigProvider) {
+  $ionicConfigProvider.navBar.alignTitle('center');
 })
+
 ;

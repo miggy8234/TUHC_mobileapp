@@ -1,11 +1,32 @@
 <ion-view view-title="Social Feed">
-  <ion-content class="padding">
-    <div class="list card" ng-init="load.tagged()">
-      <div class="item item-divider">Latest From Instagram</div>
-      <div class="card" ng-repeat="item in ngInstafeedModel.data">
-        <div class="item item-image">
-          <img ng-src="{{item.images.standard_resolution.url}}">
-        </div>
-      </div>
-  </ion-content>
+    <ion-tabs class="tabs-striped tabs-top tabs-color-assertive">
+        <ion-tab title="Instagram" icon-on="ion-social-instagram" icon-off="ion-social-instagram-outline">
+          <ion-content class="has-tabs-top padding" ng-init="tagged()">
+            <div class="list card" ng-repeat="item in model.data | limitTo:limit" ng-click="openPost(item.link)">
+              <div class="item item-avatar item-text-wrap">
+                <img ng-src="{{item.user.profile_picture}}">
+                <h2>{{item.user.username}}</h2>
+                <p>(Tap to open post)</p>
+              </div>
+              <div class="item item-image">
+                <img ng-src="{{item.images.standard_resolution.url}}">
+              </div>
+              <div class="item item-text-wrap">
+                {{item.caption.text}}
+              </div>
+            </div>
+            <ion-infinite-scroll
+              on-infinite="more()"
+              distance="15%">
+            </ion-infinite-scroll>
+          </ion-content>
+        </ion-tab>
+        <ion-tab title="Twitter" icon-on="ion-social-twitter" icon-off="ion-social-twitter-outline">
+
+        </ion-tab>
+        <ion-tab title="Facebook" icon-on="ion-social-facebook" icon-off="ion-social-facebook-outline">
+
+        </ion-tab>
+    </ion-tabs>
+  
 </ion-view>

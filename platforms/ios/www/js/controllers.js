@@ -3,7 +3,7 @@
 
 angular.module('starter.controllers', ['ngInstafeed'])
 
-.controller('LoginCtrl', function($scope, $state, $cordovaOauth, $http, $ionicPopup, $cordovaOauth) {
+.controller('LoginCtrl', function($scope, $state, $cordovaOauth, $http, $ionicPopup) {
 
   var tokenExperation = "";
   var accessToken = "";
@@ -26,6 +26,8 @@ angular.module('starter.controllers', ['ngInstafeed'])
     $cordovaOauth.google(clientId, ["email"])
         .then(function(result) {
             // results
+            auth2 = {};
+            window.localStorage['gapiToken'] = result;
             gapi.auth.setToken(result);
             console.log('GAPI with set token: ', gapi.auth);
             gapi.client.load('plus','v1', function(){
@@ -50,36 +52,92 @@ angular.module('starter.controllers', ['ngInstafeed'])
 
 })
 
-.controller('SocialFeedCtrl', function($scope, $http, ngInstafeed) {
+.controller('SocialFeedCtrl', function($scope, $state, $http, ngInstafeed) {
 
-  $scope.ngInstafeedModel = ngInstafeed.model;
-  $scope.ngInstafeedState = ngInstafeed.state;
-  $scope.load = {};
-  $scope.load.tagged = function() {
-        ngInstafeed.get({
-          get: 'user',
-          userId: 1071009335
-        }, function(err, res) {
-          if(err) { throw err; }
-          else {
-            console.log(res);
-            $scope.model = res;
-          }
-        });
-      }
 
-      $scope.load.more = function() {
-        ngInstafeed.more(function(err, res) {
-          if(err) { throw err; }
-          else {
-            console.log(res);
-          }
-        });
+  if($scope.ngInstafeedModel){$scope.ngInstafeedModel = ngInstafeed.model;}
+  if($scope.ngInstafeedState){$scope.ngInstafeedState = ngInstafeed.state;}
+  $scope.limit = 3;
+  $scope.tagged = function() {
+    ngInstafeed.get({
+      get: 'user',
+      userId: 1071009335,
+      limit: 21
+    }, function(err, res) {
+      if(err) { 
+        console.log('Error from Instagram');
+        throw err; 
       }
+      else {
+        console.log(res);
+        $scope.model = res;
+      }
+    });
+
+  $scope.openPost = function(URL){
+    window.open(URL, '_top', 'location=no, status=yes, menubar=yes');
+  }
+
+  }
+
+  $scope.more = function() {
+    /*ngInstafeed.more(function(err, res) {
+      if(err) { throw err; }
+      else {
+        console.log(res);
+      }
+    });*/
+
+    if($scope.limit < 21){
+      $scope.limit = $scope.limit +  3;
+    }
+    $scope.$broadcast('scroll.infiniteScrollComplete');
+  }
+
 
 })
 
-.controller('WelcomeCtrl', function($scope, $http) {
+.controller('SchoolDetailCtrl', function($scope, $state) {
+
+  $scope.openPeopleSoft = function(){
+    window.open('https://mytumobile.towson.edu/', '_top', 'location=no, status=yes, menubar=yes');
+  }
+  
+  $scope.openLabs = function(){
+    window.open('http://webapps.towson.edu/computers/compavail.aspx', '_top', 'location=no, status=yes, menubar=yes');
+  }
+
+  $scope.openLibary = function(){
+    window.open('http://cooklibrary.towson.edu/m/smart/', '_top', 'location=no, status=yes, menubar=yes');
+  }
+
+  $scope.openWEPA = function(){
+    window.open('http://www.towson.edu/adminfinance/ots/support/wepa/wepawhere.html', '_top', 'location=no, status=yes, menubar=yes');
+  }
+
+  $scope.openLaundry = function(){
+    window.open('https://www.laundryalert.com/cgi-bin/towson/LMPage', '_top', 'location=no, status=yes, menubar=yes');
+  }
+
+  $scope.openInvolved = function(){
+    window.open('https://involved.towson.edu/', '_top', 'location=no, status=yes, menubar=yes');
+  }
+
+  $scope.openSurvey = function(){
+    window.open('https://studentvoice.com/p/Project.aspx?q=5df2030ed14e59513dc4d1b45b3caefb5e31573048deae77190d474f2c016c8331cf935acac9b43d8b43639f284816e0b5e2f916d353589d&r=84f60074-d527-4c50-9de3-10c85ff3757b', '_top', 'location=no, status=yes, menubar=yes');
+  }
+
+  $scope.openGoGreen = function(){
+    window.open('http://www.towson.edu/adminfinance/sustainability/', '_top', 'location=no, status=yes, menubar=yes');
+  }
+
+  $scope.openSGA= function(){
+    window.open('http://mobile.towsonsga.org/', '_top', 'location=no, status=yes, menubar=yes');
+  }
+
+})
+
+.controller('WelcomeCtrl', function($scope, $state, $http) {
 
   var profile = auth2;
   $scope.name = profile.displayName;
@@ -89,7 +147,7 @@ angular.module('starter.controllers', ['ngInstafeed'])
 
 })
 
-.controller('ChatsCtrl', function($scope, Chats) {
+.controller('ChatsCtrl', function($scope) {
   // With the new view caching in Ionic, Controllers are only called
   // when they are recreated or on app start, instead of every page change.
   // To listen for when this page is active (for example, to refresh data),
@@ -98,18 +156,19 @@ angular.module('starter.controllers', ['ngInstafeed'])
   //$scope.$on('$ionicView.enter', function(e) {
   //});
 
-  $scope.chats = Chats.all();
-  $scope.remove = function(chat) {
-    Chats.remove(chat);
-  };
 })
 
-.controller('ChatDetailCtrl', function($scope, $stateParams, Chats) {
-  $scope.chat = Chats.get($stateParams.chatId);
+.controller('ChatDetailCtrl', function($scope, $state) {
+
 })
 
-.controller('AccountCtrl', function($scope) {
-  $scope.settings = {
-    enableFriends: true
-  };
+.controller('AccountCtrl', function($scope, $state) {
+  
+  $scope.signout = function(){
+    if(window.localStorage['gapiToken']){
+      gapi.auth.signOut();
+      window.localStorage.removeItem('gapiToken');
+    }
+    window.location.href = '#/login';
+  }
 });
